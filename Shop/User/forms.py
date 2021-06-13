@@ -3,7 +3,7 @@ from django.forms import ModelForm, fields
 from django.forms import widgets
 from django.forms.widgets import Widget
 from django.core.exceptions import ValidationError
-
+from.models import User
 from .models import User
 class Login_Form(ModelForm):
     class Meta:
@@ -24,3 +24,13 @@ class Register_Form(forms.Form):
         if pass1 != pass2:
             raise ValidationError("Your entered password didn't match")
         return cleaned_data
+
+    def clean_user_name(self):
+        user_name = self.cleaned_data["user_name"]
+        
+        
+        try:
+            User.objects.get(user_name=user_name)
+        except User.DoesNotExist:
+            return user_name
+        raise ValidationError("this user name has already exists")

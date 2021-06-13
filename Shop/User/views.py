@@ -1,7 +1,8 @@
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from .forms import Login_Form, Register_Form
+from .models import User
 # Create your views here.
 
 class Login(View):
@@ -40,8 +41,15 @@ class Register(View):
         form = self.form(request.POST)
         if form.is_valid():
                 # <process form cleaned data>
-            print(form.cleaned_data)
-            return HttpResponse('success')
+            data = form.cleaned_data
+            user_name = data["user_name"]
+            password = data["password1"]
+            name = data["name"]
+            email= data['email']
+            new_user = User(user_name=user_name, name=name, email= email, password= password)
+            new_user.save()
+            
+            return HttpResponseRedirect('/login/')
         else:
             print(form.errors)
 
