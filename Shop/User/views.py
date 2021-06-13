@@ -6,14 +6,14 @@ from .forms import Login_Form, Register_Form
 
 class Login(View):
     form = Login_Form
-    template_name = 'Login.html'
+    template_name = 'login.html'
     initial = {"key" : "value"}
     def get(self, request, *args, **kwargs):
         form = self.form(initial=self.initial)
         return render(request, self.template_name, {'form': form})
     
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form(request.POST)
         if form.is_valid():
                 # <process form cleaned data>
             return HttpResponse('success')
@@ -25,14 +25,14 @@ class Login(View):
 class Register(View):
     
     form = Register_Form
-    template_name = 'Register.html'
+    template_name = 'register.html'
     initial = {"key" : "value"}
     def get(self, request, *args, **kwargs):
         form = self.form(initial=self.initial)
         return render(request, self.template_name, {'form': form})
     
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form(request.POST)
         if form.is_valid():
                 # <process form cleaned data>
             return HttpResponse('success')

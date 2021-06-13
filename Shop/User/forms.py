@@ -8,7 +8,7 @@ class Login_Form(ModelForm):
         model = User
         fields = ['user_name', 'password']
 
-class Register_Form(forms):
+class Register_Form(forms.Form):
     user_name = forms.CharField(max_length=100)
     name = forms.CharField(max_length=100)
     email = forms.CharField(max_length=100)
