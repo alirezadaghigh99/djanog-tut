@@ -10,6 +10,21 @@ class Login_Form(ModelForm):
         model = User
         fields = ['user_name', 'password']
 
+    def clean(self):
+        data = super().clean()
+        user_name = data["user_name"]
+        password = data["password"]
+
+        try:
+            user = User.objects.get(user_name = user_name)
+            if user.password != password:
+                raise ValidationError("this user name and password does not match")
+            else:
+                return data
+
+        except User.DoesNotExist:
+            raise ValidationError("this user does not exists")
+
 class Register_Form(forms.Form):
     user_name = forms.CharField(max_length=100)
     name = forms.CharField(max_length=100)
