@@ -3,7 +3,10 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from .forms import Login_Form, Register_Form
-from .models import User
+from .models import User as User
+from django.contrib.auth.models import User as Save_User
+from django.contrib.auth import authenticate, login
+
 # Create your views here.
 
 class Login(View):
@@ -26,8 +29,12 @@ class Login(View):
             data = form.cleaned_data
 
             user_name = data["user_name"]
-
-            return HttpResponse("success")
+            password = data["password"]
+            user = authenticate(username=user_name, password=password)
+            print(user, "sdflklksjdf")
+            if user is not None:
+                login(request,  user)
+                return HttpResponseRedirect("/success")
 
 
         return render(request, self.template_name, {'form': form})
@@ -54,9 +61,18 @@ class Register(View):
             email= data['email']
             new_user = User(user_name=user_name, name=name, email= email, password= password)
             new_user.save()
+            user = Save_User.objects.create_user(username=user_name, password= password, first_name= name)
+            user.save()
             
             return HttpResponseRedirect('/login/')
         else:
             print(form.errors)
 
         return render(request, self.template_name, {'form': form})
+
+class SuccessLogin(View):
+    template_name = 'success.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+
+    

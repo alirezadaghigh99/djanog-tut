@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from User.views import Login, Register
+from django.conf import settings
+from django.conf.urls.static import static
+from User.views import Login, Register, SuccessLogin
+from Product.views import add_product
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/',Login.as_view() ),
     path('register/', Register.as_view()),
-]
+    path("success/",SuccessLogin.as_view() ),
+    path('add-product/',add_product )
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
